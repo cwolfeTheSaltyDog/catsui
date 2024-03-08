@@ -1,0 +1,85 @@
+<div class="card" *ngIf="selectedCat">
+  <div class="card-header">
+    {{ pageTitle }}
+  </div>
+  <div class="card-body">
+    <form novalidate
+    (ngSubmit)="saveCat()" [formGroup]="catForm">
+      <fieldset>
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label"
+                for="catNameId">Cat Name</label>
+          <div class="col-md-9">
+            <input
+              [ngClass]="{ 'is-invalid': displayMessage.catName }"
+              class="form-control"
+              id="catNameId"
+              type="text"
+              placeholder="Name (required)"
+              formControlName="catName"
+              (blur)="blur()"
+            />
+            <span class="invalid-feedback" *ngIf="displayMessage.catName">
+              {{ displayMessage.catName }}
+            </span>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label"
+                for="coatColorId">Coat Color</label>
+          <div class="col-md-9">
+            <input
+              [ngClass]="{ 'is-invalid': displayMessage.coatColor }"
+              class="form-control"
+              id="coatColorId"
+              type="text"
+              placeholder="Name (required)"
+              formControlName="coatColor"
+              (blur)="blur()"
+            />
+            <span class="invalid-feedback" *ngIf="displayMessage.coatColor">
+              {{ displayMessage.coatColor }}
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-md-10 col-md-offset-2">
+            <span>
+              <button
+                class="btn btn-primary"
+                type="submit"
+                style="width: 80px; margin-right: 10px"
+                [disabled]="!catForm.valid || !catForm.dirty"
+              >
+                Save
+              </button>
+            </span>
+            <span>
+              <button
+                class="btn btn-light"
+                type="button"
+                style="width: 80px; margin-right: 10px"
+                (click)="cancelEdit()"
+              >
+                Cancel
+              </button>
+            </span>
+            <span>
+              <button
+                class="btn btn-light"
+                type="button"
+                style="width: 80px"
+                (click)="deleteCat()"
+              >
+                Delete
+              </button>
+            </span>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    Error: {{ errorMessage }}
+  </div>
+</div>

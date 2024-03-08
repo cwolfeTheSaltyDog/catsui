@@ -1,0 +1,58 @@
+# Node.js with Angular
+# Build a Node.js project that uses Angular.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- develop
+
+variables:
+  # Azure Resource Manager connection created during pipeline creation
+  azureSubscription: 'Microsoft Internal Subscription 1(8a9bdacb-2dc5-4a43-861b-fd6373a9c24f)'
+  
+  # Environment name
+  environmentName: ''
+
+  # Web app name
+  webAppName: 'catsui'
+
+stages:
+- stage: Build
+  displayName: Build Stage
+  jobs:
+  - job: BuildJob
+    pool:
+     vmImage: ubuntu-latest
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '10.x'
+      displayName: 'Install Node.js'
+
+    - script: |       
+        cd '$(System.DefaultWorkingDirectory)'
+        npm install -g @angular/cli
+        npm install
+        ng build --prod
+      displayName: 'npm install and build'
+
+    - task: CopyFiles@2
+      displayName: 'Copy files'
+      inputs:      
+         SourceFolder: '$(System.DefaultWorkingDirectory)/dist/Cats/'        
+         TargetFolder: '$(build.artifactstagingdirectory)'
+
+    - task: ArchiveFiles@2
+      displayName: 'Archive files'
+      inputs:
+          rootFolderOrFile: '$(build.artifactstagingdirectory)'
+          includeRootFolder: false
+          archiveType: zip
+          archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+          replaceExistingArchive: true     
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'

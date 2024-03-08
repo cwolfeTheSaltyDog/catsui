@@ -1,0 +1,19 @@
+<div class="row">
+  <div class="col-md-4">
+    <wsa-cat-list [cats]="cats$ | async"
+                  [selectedCat] = "selectedCat$ | async"
+                  [errorMessage] = "errorMessage$ | async"
+                  (initializeNewCat) = "newCat()"
+                  (catWasSelected) = "catSelected($any($event))"></wsa-cat-list>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-4">
+    <wsa-cat-edit [selectedCat]="selectedCat$ | async"
+    [errorMessage]="errorMessage$ |async"
+    (clearCurrent)="clearCat()"
+    (update)="updateCat($any($event))"
+    (delete)="deleteCat($any($event))"
+    (create)="saveCat($any($event))"></wsa-cat-edit>
+  </div>
+</div>
